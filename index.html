@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Jyoti Dixit Portfolio</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Load React and Babel for in-browser JSX compilation -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body>
+    <!-- 
+        This is the single HTML element where the entire React application
+        will be injected and rendered.
+    -->
+    <div id="root">
+        <!-- The content here will be replaced by the React application -->
+        <div class="p-8 text-center text-slate-300 bg-slate-900">Loading Portfolio...</div>
+    </div>
+
+    <!-- 
+        This script tag contains your entire React application (JSX). 
+        The "text/babel" type tells the Babel compiler (loaded above) 
+        to process the code before React executes it.
+    -->
+    <script type="text/babel">
+        // --- Static Data & Configuration ---
+        const ICON_SVGS = {
+            Home: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+            User: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+            Lightbulb: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 14c.2-1 .6-3.3 2.1-4.7 1.3-1.4 1.5-3.3.6-4.9-1-.9-2.7-1.4-4.2-.3-1.5 1.1-1.9 2.1-1.9 3.3L8 18c-1.3 1.3-3.7 3.3-4.3 4H20c-.6-1-3-3-4.3-4z"/></svg>,
+            GraduationCap: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.42 10.992c-.01 0-.02 0-.03 0a1 1 0 0 0-.897.557l-9 14a1 1 0 0 0 1.776.904l9-14a1 1 0 0 0-.903-1.461Z"/><path d="M5 14v10M3 14l9-5.4M12 2v10M21 14l-9-5.4"/></svg>,
+            Code: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>,
+            Briefcase: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>,
+            Mail: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>,
+            Zap: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        };
+
+        const NAV_ITEMS = [
+            { id: 'home', name: 'Home', icon: 'Home', label: 'Introduction' },
+            { id: 'about', name: 'About', icon: 'User', label: 'Biography' },
+            { id: 'skills', name: 'Skills', icon: 'Lightbulb', label: 'Core Competencies' },
+            { id: 'education', name: 'Education', icon: 'GraduationCap', label: 'Academic Background' },
+            { id: 'projects', name: 'Projects', icon: 'Code', label: 'Key Projects' },
+            { id: 'contact', name: 'Contact Me', icon: 'Mail', label: 'Get in Touch' },
+        ];
+
+        const SKILLS = [
+            { name: 'React', level: 'Intermediate', color: 'bg-cyan-600', width: '55%' },
+            { name: 'JavaScript (ES6+)', level: 'Intermediate', color: 'bg-yellow-500', width: '65%' },
+            { name: 'Tailwind CSS', level: 'Advanced', color: 'bg-teal-500', width: '95%' },
+            { name: 'Node.js & Express', level: 'Intermediate', color: 'bg-green-600', width: '80%' },
+            { name: 'HTML', level: 'Expert', color: 'bg-orange-500', width: '99%' },
+            { name: 'CSS', level: 'Advanced', color: 'bg-blue-500', width: '85%' },
+            { name: 'DSA (C++)', level: 'Intermediate', color: 'bg-pink-600', width: '45%' },
+            { name: 'MongoDB/SQL', level: 'Beginner', color: 'bg-red-500', width: '25%' },
+        ];
+
+        const INITIAL_PROJECTS_DATA = [
+            { id: 1, title: 'Image editing with AI or api', tech: 'React,  Tailwind CSS', description: 'Create a Image editing webpage that use an api to edit the image as per the valid text or prompt written by anyone in the input tage. ' },
+            { id: 2, title: 'Road MAP Generator for any field', tech: 'React, CSS, HTML , JS', description: 'Created a simple Road Map generator for any course or to learn any skills. I made this using an api call to geenrate road map through api.'},
+            { id: 3, title: 'Amazon Clone Dashboard', tech: 'HTML, CSS', description: 'Created a Amazon clone to improve web developing 2 core skills z and css.' },
+            { id: 4, title: 'Real time ChatBOT', tech: 'HTML, CSS, JS', description: 'Created a ChatBot like chatgpt but with the help of a youtube video.' },
+        ];
+
+        
+
+        const EDUCATION = [
+            { degree: ' 10+2 ', institution: 'Suraj Govind Sen. Sec. School', years: '2023', details: ' Core Concepts with PCM.' },
+            { degree: 'Bachelor of Science in Software Engineering', institution: 'Anand Engineering College', years: '2023 - 2027', details: "Focused on Data Structures, Algorithms, and Object-Oriented Programming , Operating Systems and some important subjects..." }
+        ];
+
+        const INITIAL_ABOUT_TEXT = {
+            p1: 'I am a passionate developer who is just a fresher crafting dynamic and user-centric web applications.',
+          
+            p2: 'When I\'m not coding, I enjoy exploring new design trends and contributing to open-source projects. I believe in creating solutions that are both technically robust and visually appealing.',
+            p3: <a href= 'https://github.com/jyotidxt'><i class="fa-brands fa-github"></i> 👈 View My Github Profile</a> ,
+            p4:<a href='linkedin.com/in/jyotidixit'><i class="fa-brands fa-square-linkedin"></i> 👈 View My LinkedIn Profile</a>
+            ,
+        };
+
+       
+        /**
+         * Common component for section titles
+         */
+        const SectionTitle = ({ id, iconName, title, subtitle }) => (
+            <div id={id} className="pt-20 -mt-16 mb-10 sm:pt-24 sm:-mt-20">
+                <h2 className="text-4xl font-extrabold text-white sm:text-5xl flex items-center mb-2 animate-fadeInUp">
+                    <span className="w-8 h-8 mr-4 text-cyan-400">{ICON_SVGS[iconName]}</span>
+                    {title}
+                </h2>
+                <p className="text-xl text-slate-400 font-light">{subtitle}</p>
+                <div className="w-20 h-1 bg-cyan-500 rounded-full mt-3"></div>
+            </div>
+        );
+
+        /**
+         * Main application component
+         */
+        const App = () => {
+            // Destructure React hooks directly from React global object
+            const { useState, useEffect, useCallback, useMemo } = React;
+
+            // --- State Management ---
+            const [activeSection, setActiveSection] = useState('home');
+            const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+            const [aboutMeText, setAboutMeText] = useState(INITIAL_ABOUT_TEXT);
+            const [projects, setProjects] = useState(INITIAL_PROJECTS_DATA);
+
+            // --- Utility Functions ---
+            const scrollToSection = useCallback((id) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+                setActiveSection(id);
+                setIsMobileMenuOpen(false);
+            }, []);
+
+            const checkActiveSection = useCallback(() => {
+                let current = 'home';
+                const scrollPosition = window.scrollY + 150; // Offset for fixed header/smooth scroll
+
+                NAV_ITEMS.forEach(item => {
+                    const el = document.getElementById(item.id);
+                    if (el && el.offsetTop <= scrollPosition) {
+                        current = item.id;
+                    }
+                });
+
+                setActiveSection(prev => (prev !== current ? current : prev));
+            }, []);
+
+            useEffect(() => {
+                window.addEventListener('scroll', checkActiveSection);
+                checkActiveSection(); // Initial check
+
+                return () => window.removeEventListener('scroll', checkActiveSection);
+            }, [checkActiveSection]);
+
+        
+              
+
+            // --- Component Rendering (Memoized for performance) ---
+
+            const HomeSection = useMemo(() => (
+                <div id="home" className="min-h-screen flex items-center justify-center p-8 text-center pt-24 lg:pt-0">
+                    <div className="max-w-4xl mx-auto animate-[fadeInUp_1s_ease-out]">
+                        <p className="text-xl font-light text-cyan-400 mb-4 sm:text-2xl">Hello, I'm</p>
+                        <h1 className="text-6xl font-black tracking-tight text-white mb-4 sm:text-8xl">
+                           Jyoti <span className="text-cyan-400">Dixit</span>
+                        </h1>
+                        <h2 className="text-3xl font-semibold text-slate-300 mb-8 sm:text-4xl">
+                           Junior <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">Frontend Developer</span>
+                        </h2>
+                        <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                            Specializing in building exceptional digital experiences. Focused on responsive design, performance optimization, and scalable single-page applications using <strong>React</strong> and <strong>Tailwind CSS</strong>.
+                        </p>
+                        <button
+                            onClick={() => scrollToSection('contact')}
+                            className="inline-block px-8 py-3 text-lg font-bold text-white bg-cyan-600 rounded-full shadow-lg shadow-cyan-900/50 transition-all duration-300 transform hover:scale-105 hover:bg-cyan-500 focus:outline-none focus:ring-4 focus:ring-cyan-500"
+                        >
+                            Resume
+                        </button>
+                    </div>
+                </div>
+            ), [scrollToSection]);
+
+
+            const AboutSection = () => (
+                <div className="py-20 max-w-5xl mx-auto px-6 lg:px-8">
+                    <SectionTitle id="about" iconName="User" title="About Me" subtitle="A brief introduction to my journey." />
+                    <div className="grid md:grid-cols-3 gap-10 items-center">
+                        <div className="md:col-span-2">
+                            {Object.values(aboutMeText).map((text, index) => (
+                                <p key={index} className="text-slate-300 text-lg mb-6 leading-relaxed">
+                                    {text}
+                                </p>
+                            ))}
+                          
+                            <div className="mt-8 pt-4 border-t border-slate-700">
+                            </div>
+                        </div>
+                        <div className="md:col-span-1 flex justify-center">
+                            <div className="w-60 h-60 bg-slate-800 rounded-full flex items-center justify-center border-4 border-cyan-500 shadow-2xl shadow-cyan-900/50">
+                                <span className="text-5xl font-extrabold text-cyan-400">Dixit</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const SkillsSection = useMemo(() => (
+                <div className="py-20 max-w-5xl mx-auto px-6 lg:px-8">
+                    <SectionTitle id="skills" iconName="Lightbulb" title="Skills" subtitle="The technologies I use every day." />
+                    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                        {SKILLS.map((skill, index) => (
+                            <div key={index} className="p-6 bg-slate-800 rounded-xl shadow-lg hover:shadow-cyan-900/50 transition-all duration-300 transform hover:-translate-y-1">
+                                <h3 className="text-2xl font-bold text-white mb-2">{skill.name}</h3>
+                                <p className="text-sm text-cyan-400 mb-4">{skill.level}</p>
+                                <div className="w-full bg-slate-700 rounded-full h-3">
+                                    <div
+                                        className={`${skill.color} h-3 rounded-full transition-all duration-1000`}
+                                        style={{ width: skill.width }}
+                                    ></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ), []);
+
+            const EducationSection = useMemo(() => (
+                <div className="py-20 max-w-5xl mx-auto px-6 lg:px-8">
+                    <SectionTitle id="education" iconName="GraduationCap" title="Education" subtitle="Formal training and certifications." />
+                    <div className="relative border-l-4 border-cyan-600 pl-6">
+                        {EDUCATION.map((entry, index) => (
+                            <div key={index} className="mb-12 relative">
+                                <div className="absolute -left-8 top-1 w-4 h-4 bg-cyan-500 rounded-full border-4 border-slate-900"></div>
+                                <h3 className="text-2xl font-bold text-white mb-1">{entry.degree}</h3>
+                                <p className="text-lg font-semibold text-cyan-400 mb-1">{entry.institution}</p>
+                                <p className="text-sm italic text-slate-400 mb-3">{entry.years}</p>
+                                <p className="text-slate-300 leading-relaxed">{entry.details}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ), []);
+
+            const ProjectsSection = () => (
+                <div className="py-20 max-w-5xl mx-auto px-6 lg:px-8">
+                    <SectionTitle id="projects" iconName="Code" title="Projects" subtitle="Showcasing my favorite technical work." />
+                    <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+                        {projects.map(project => {
+                          
+                            
+                            return (
+                                <div key={project.id} className="bg-slate-800 p-6 rounded-xl shadow-xl border-t-4 border-cyan-600 transition-all duration-300 hover:shadow-cyan-900/70 hover:scale-[1.02]">
+                                    <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
+                                    <p className="text-sm font-medium text-cyan-400 mb-4 italic">{project.tech}</p>
+                                    <p className="text-slate-300 leading-relaxed mb-4">{project.description}</p>
+                                    
+                                   
+                                    
+                                 
+                                         
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+
+            
+
+            const ContactSection = useMemo(() => {
+                const handleContactSubmit = (e) => {
+                    e.preventDefault();
+                    const form = e.target;
+                    const formData = {
+                        name: form.name.value,
+                        email: form.email.value,
+                        message: form.message.value
+                    };
+                    console.log('Form Submitted (Simulated):', formData);
+                    form.reset();
+                };
+
+                const InputField = ({ label, name, type, placeholder }) => (
+                    <div>
+                        <label htmlFor={name} className="block text-sm font-medium text-slate-300 mb-2">{label}</label>
+                        <input
+                            type={type}
+                            name={name}
+                            id={name}
+                            placeholder={placeholder}
+                            required
+                            className="w-full p-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-cyan-500 focus:border-cyan-500 transition-colors duration-200"
+                        />
+                    </div>
+                );
+
+                const TextAreaField = ({ label, name, placeholder }) => (
+                    <div>
+                        <label htmlFor={name} className="block text-sm font-medium text-slate-300 mb-2">{label}</label>
+                        <textarea
+                            name={name}
+                            id={name}
+                            rows="4"
+                            placeholder={placeholder}
+                            required
+                            className="w-full p-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-cyan-500 focus:border-cyan-500 transition-colors duration-200"
+                        ></textarea>
+                    </div>
+                );
+                
+                return (
+                    <div className="py-20 max-w-5xl mx-auto px-6 lg:px-8">
+                        <SectionTitle id="contact" iconName="Mail" title="Contact Me" subtitle="Let's build something amazing together." />
+                        <form onSubmit={handleContactSubmit} className="bg-slate-800 p-8 rounded-xl shadow-2xl border-t-4 border-cyan-600">
+                            <div className="space-y-6">
+                                <InputField label="Name" name="name" type="text" placeholder="Your Name" />
+                                <InputField label="Email" name="email" type="email" placeholder="you@example.com" />
+                                <TextAreaField label="Message" name="message" placeholder="How can I help you?" />
+
+                                <button
+                                    type="submit"
+                                    className="w-full py-3 text-lg font-bold text-white bg-cyan-600 rounded-lg shadow-md shadow-cyan-900/50 transition-all duration-300 transform hover:scale-[1.01] hover:bg-cyan-500 focus:outline-none focus:ring-4 focus:ring-cyan-500"
+                                >
+                                    Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                );
+            }, []);
+
+            // --- Navigation Components ---
+            const NavIconButton = ({ item }) => {
+                const activeClass = activeSection === item.id 
+                    ? 'bg-cyan-600 text-white shadow-xl shadow-cyan-900/50' 
+                    : 'bg-slate-700 text-slate-300 hover:bg-cyan-700 hover:text-white';
+                
+                return (
+                    <button
+                        onClick={() => scrollToSection(item.id)}
+                        title={item.name}
+                        className={`
+                            p-3 transition-all duration-300 rounded-full
+                            ${activeClass}
+                            focus:outline-none focus:ring-4 focus:ring-cyan-500 focus:ring-opacity-50
+                            mx-2 sm:mx-0 lg:mb-4
+                        `}
+                    >
+                        <span className="w-6 h-6">{ICON_SVGS[item.icon]}</span>
+                    </button>
+                );
+            };
+
+            const MobileHeader = () => (
+                <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-slate-900/95 backdrop-blur-sm border-b border-slate-800 lg:hidden p-4 flex justify-between items-center">
+                    <h1 className="text-2xl font-bold text-cyan-400">J.D</h1>
+                    <button onClick={() => setIsMobileMenuOpen(prev => !prev)} className="p-2 text-slate-300 hover:text-cyan-400">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}></path>
+                        </svg>
+                    </button>
+                </header>
+            );
+
+            const MobileMenu = () => (
+                <nav 
+                    className={`fixed top-16 left-0 right-0 z-40 bg-slate-800/95 backdrop-blur-md p-4 transition-transform duration-300 ease-in-out lg:hidden 
+                        ${isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'}
+                    `}
+                >
+                    <div className="flex flex-col space-y-2">
+                        {NAV_ITEMS.map(item => (
+                            <a
+                                key={item.id}
+                                href={`#${item.id}`}
+                                onClick={(e) => { e.preventDefault(); scrollToSection(item.id); }}
+                                className={`
+                                    px-4 py-3 rounded-lg text-lg font-medium transition-colors duration-200
+                                    flex items-center
+                                    ${activeSection === item.id ? 'bg-cyan-700 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-cyan-400'}
+                                `}
+                            >
+                                <span className="w-5 h-5 mr-3">{ICON_SVGS[item.icon]}</span>
+                                {item.name}
+                            </a>
+                        ))}
+                    </div>
+                </nav>
+            );
+
+            const DesktopSidebar = () => (
+                <nav className="hidden lg:block fixed left-0 top-0 h-screen w-20 bg-slate-900 border-r border-slate-800 p-4 pt-10 z-50">
+                    <div className="flex flex-col items-center h-full justify-between">
+                        <h1 className="text-3xl font-black text-cyan-400 mb-10">JD</h1>
+                        <div className="flex flex-col items-center">
+                            {NAV_ITEMS.map(item => <NavIconButton key={item.id} item={item} />)}
+                        </div>
+                        <div className="text-xs text-slate-600 rotate-90 mb-16">
+                            © {new Date().getFullYear()}
+                        </div>
+                    </div>
+                </nav>
+            );
+
+            // --- Main Render ---
+            return (
+                <div className="bg-slate-900 min-h-screen font-inter text-slate-50 antialiased">
+                    <style>
+                        {`
+                            html { scroll-behavior: smooth; }
+                            .animate-\\[fadeInUp_1s_ease-out\\] { 
+                                animation: fadeInUp 1s ease-out; 
+                            }
+                            @keyframes fadeInUp {
+                                from { opacity: 0; transform: translateY(20px); }
+                                to { opacity: 1; transform: translateY(0); }
+                            }
+                            /* Ensure scroll space for fixed navigation */
+                            .pt-20 { padding-top: 80px; }
+                            .-mt-16 { margin-top: -64px; }
+                        `}
+                    </style>
+                    
+                    <MobileHeader />
+                    <MobileMenu />
+                    <DesktopSidebar />
+
+                    <main className="flex-1 lg:ml-20 pt-16 lg:pt-0">
+                        <div className="max-w-7xl mx-auto py-4 lg:py-12">
+                            {HomeSection}
+                            <div className="px-4">
+                                <AboutSection />
+                                {SkillsSection}
+                                {EducationSection}
+                                <ProjectsSection />
+                                {ContactSection}
+                            </div>
+                        </div>
+                    </main>
+
+                    <footer className="lg:ml-20 py-8 text-center border-t border-slate-800">
+                        <p className="text-slate-500 text-sm">
+                            Designed and Built with <span className="text-cyan-400">React</span> and <span className="text-cyan-400">Tailwind CSS</span>
+                        </p>
+                    </footer>
+                </div>
+            );
+            
+            }
+        // --- Standard React Mounting (This part is crucial for the HTML wrapper) ---
+        const container = document.getElementById('root');
+        // Use ReactDOM.render for compatibility with CDN setup
+        ReactDOM.render(<App />, container);
+
+    </script>
+</body>
+</html>
